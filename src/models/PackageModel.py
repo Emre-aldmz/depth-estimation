@@ -19,7 +19,6 @@ class InputImage(Input):
         title = "Image"
 
 class OutputDepthImage(Output):
-    """ Derinlik haritasının görselleştirilmiş siyah-beyaz (veya renkli) hali """
     name: Literal["outputDepthImage"] = "outputDepthImage"
     value: Union[List[Image], Image]
     type: Literal["Images"] = "Images"
@@ -28,7 +27,6 @@ class OutputDepthImage(Output):
         title = "Depth Map Image"
 
 class OutputDepthArray(Output):
-    """ Şirketin 3D/Mesafe işlemleri için kullanacağı ham Numpy Array verisi """
     name: Literal["outputDepthArray"] = "outputDepthArray"
     value: list
     type: Literal["list"] = "list"
@@ -111,7 +109,6 @@ class ModelVersionV2(Config):
         title = "Depth Anything V2"
 
 class ConfigModelVersion(Config):
-    """ V2 ve V3 arasındaki seçimi sağlayan ana açılır menü """
     name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
     value: Union[ModelVersionV3, ModelVersionV2]
     type: Literal["object"] = "object"
