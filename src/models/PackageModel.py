@@ -1,8 +1,6 @@
-
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
-
+from sdks.novavision.src.base.model import  Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
@@ -20,131 +18,156 @@ class InputImage(Input):
     class Config:
         title = "Image"
 
-
-class OutputImage(Output):
-    name: Literal["outputImage"] = "outputImage"
-    value: Union[List[Image],Image]
-    type: str = "object"
-
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
+class OutputDepthImage(Output):
+    """ Derinlik haritasının görselleştirilmiş siyah-beyaz (veya renkli) hali """
+    name: Literal["outputDepthImage"] = "outputDepthImage"
+    value: Union[List[Image], Image]
+    type: Literal["Images"] = "Images"
 
     class Config:
-        title = "Image"
+        title = "Depth Map Image"
+
+class OutputDepthArray(Output):
+    """ Şirketin 3D/Mesafe işlemleri için kullanacağı ham Numpy Array verisi """
+    name: Literal["outputDepthArray"] = "outputDepthArray"
+    value: list
+    type: Literal["list"] = "list"
+
+    class Config:
+        title = "Raw Depth Data"
 
 
-class KeepSideFalse(Config):
-    name: Literal["False"] = "False"
-    value: Literal[False] = False
-    type: Literal["bool"] = "bool"
+class ConfigDeviceGPU(Config):
+    name: Literal["ConfigDeviceGPU"] = "ConfigDeviceGPU"
+    value: Literal["GPU"] = "GPU"
+    type: Literal["string"] = "string"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Disable"
+        title = "GPU (CUDA)"
 
-
-class KeepSideTrue(Config):
-    name: Literal["True"] = "True"
-    value: Literal[True] = True
-    type: Literal["bool"] = "bool"
+class ConfigDeviceCPU(Config):
+    name: Literal["ConfigDeviceCPU"] = "ConfigDeviceCPU"
+    value: Literal["CPU"] = "CPU"
+    type: Literal["string"] = "string"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Enable"
+        title = "CPU"
 
-
-class KeepSideBBox(Config):
-    """
-        Rotate image without catting off sides.
-    """
-    name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
+class ConfigDevice(Config):
+    name: Literal["ConfigDevice"] = "ConfigDevice"
+    value: Union[ConfigDeviceCPU, ConfigDeviceGPU]
     type: Literal["object"] = "object"
-    field: Literal["dropdownlist"] = "dropdownlist"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
 
     class Config:
-        title = "Keep Sides"
+        title = "Device"
+        json_schema_extra = {"shortDescription": "Processing Device"}
 
-
-class Degree(Config):
-    """
-        Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
-    """
-    name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
-    type: Literal["number"] = "number"
+class DepthModelV3(Config):
+    """ Depth Anything V3 - Small """
+    name: Literal["DepthModelV3"] = "DepthModelV3"
+    value: str = "da3_small.pth"
+    type: Literal["string"] = "string"
     field: Literal["textInput"] = "textInput"
-    placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
+    restart: Literal[True] = True
 
     class Config:
-        title = "Angle"
+        title = "V3 Model Path"
 
+class ModelVersionV3(Config):
+    depthModel: DepthModelV3
+    configDevice: ConfigDevice
+    name: Literal["Version3"] = "Version3"
+    value: Literal["Version3"] = "Version3"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
 
-class PackageInputs(Inputs):
+    class Config:
+        title = "Depth Anything V3"
+
+class DepthModelV2(Config):
+    """ Depth Anything V2 - Small """
+    name: Literal["DepthModelV2"] = "DepthModelV2"
+    value: str = "da2_small.pth"
+    type: Literal["string"] = "string"
+    field: Literal["textInput"] = "textInput"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "V2 Model Path"
+
+class ModelVersionV2(Config):
+    depthModel: DepthModelV2
+    configDevice: ConfigDevice
+    name: Literal["Version2"] = "Version2"
+    value: Literal["Version2"] = "Version2"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Depth Anything V2"
+
+class ConfigModelVersion(Config):
+    """ V2 ve V3 arasındaki seçimi sağlayan ana açılır menü """
+    name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
+    value: Union[ModelVersionV3, ModelVersionV2]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "Model Version"
+        json_schema_extra = {"shortDescription": "Select DA Version"}
+
+class DepthInputs(Inputs):
     inputImage: InputImage
 
+class DepthConfigs(Configs):
+    configModelVersion: ConfigModelVersion
 
-class PackageConfigs(Configs):
-    degree: Degree
-    drawBBox: KeepSideBBox
+class DepthOutputs(Outputs):
+    outputDepthImage: OutputDepthImage
+    outputDepthArray: OutputDepthArray
 
-
-class PackageOutputs(Outputs):
-    outputImage: OutputImage
-
-
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+class DepthRequest(Request):
+    inputs: Optional[DepthInputs]
+    configs: DepthConfigs
 
     class Config:
-        json_schema_extra = {
-            "target": "configs"
-        }
+        json_schema_extra = {"target": "configs"}
 
+class DepthResponse(Response):
+    outputs: DepthOutputs
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
-
-
-class PackageExecutor(Config):
-    name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+class DepthEstimationExecutor(Config):
+    name: Literal["DepthEstimation"] = "DepthEstimation"
+    value: Union[DepthRequest, DepthResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
-        json_schema_extra = {
-            "target": {
-                "value": 0
-            }
-        }
-
+        title = "Depth Estimation"
+        json_schema_extra = {"target": {"value": 0}}
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[DepthEstimationExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
 
     class Config:
         title = "Task"
-        json_schema_extra = {
-            "target": "value"
-        }
-
+        json_schema_extra = {"target": "value"} 
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
 
-
 class PackageModel(Package):
     configs: PackageConfigs
-    type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    type: Literal["capsule"] = "capsule"
+    name: Literal["DepthEstimation"] = "DepthEstimation"
+    UID = "DE_1001001" 
