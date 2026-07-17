@@ -1,6 +1,9 @@
 import os
 import torch
-from depth_anything_v2.dpt import DepthAnythingV2 
+from huggingface_hub import hf_hub_download 
+
+from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
+from capsules.DepthEstimation.src.classes.depth_anything_3.api import DepthAnything3
 
 class ModelLoader:
     def __init__(self, config: dict):
@@ -20,35 +23,25 @@ class ModelLoader:
         return "cpu"
 
     def load_model(self) -> dict:
-     
         self.device = self._determine_device()
         
         executor_cfg = self.config.get("executor", {}).get("value", {})
         configs = executor_cfg.get("configs", {})
         model_version_data = configs.get("configModelVersion", {})
-        selected_version = model_version_data.get("name") 
-        
-        weights_dir = os.path.join(os.path.dirname(__file__), "../weights")
+        selected_version = model_version_data.get("name") # "Version2" veya "Version3"
         
         if selected_version == "Version2":
-            model_file = model_version_data.get("value", {}).get("depthModel", {}).get("value", "da2_small.pth")
-            model_path = os.path.join(weights_dir, model_file)
+            repo_id = "depth-anything/Depth-Anything-V2-Small"
+            filename = "depth_anything_v2_vits.pth"
+            
+            model_path = hf_hub_download(repo_id=repo_id, filename=filename)
             
             self.model = DepthAnythingV2(encoder='vits', features=64, out_channels=[48, 96, 192, 384])
-            if os.path.exists(model_path):
-                self.model.load_state_dict(torch.load(model_path, map_location=self.device))
+            self.model.load_state_dict(torch.load(model_path, map_location=self.device))
             self.model = self.model.to(self.device).eval()
             
         elif selected_version == "Version3":
-            from depth_anything_3.api import DepthAnything3
-            model_file = model_version_data.get("value", {}).get("depthModel", {}).get("value", "da3_small.pth")
-            model_path = os.path.join(weights_dir, model_file)
-            
-            if os.path.exists(model_path):
-                self.model = DepthAnything3.from_pretrained(model_path)
-            else:
-                self.model = DepthAnything3.from_pretrained("depth-anything/DA3-SMALL")
-                
+            self.model = DepthAnything3.from_pretrained("depth-anything/DA3-SMALL")
             self.model = self.model.to(device=torch.device(self.device))
             
         return {
