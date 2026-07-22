@@ -1,0 +1,7 @@
+# Depth Estimation - Core Dependencies
+torch>=2.0.0
+numpy>=1.21.0
+opencv-python>=4.5.5.64
+
+# Database / Caching
+redis>=4.0.0
