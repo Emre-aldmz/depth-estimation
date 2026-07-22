@@ -31,7 +31,7 @@ from PIL import Image
 from depth_anything_3.cfg import create_object, load_config
 from depth_anything_3.registry import MODEL_REGISTRY
 from depth_anything_3.specs import Prediction
-from depth_anything_3.utils.export import export
+# from depth_anything_3.utils.export import export
 from depth_anything_3.utils.geometry import affine_inverse
 from depth_anything_3.utils.io.input_processor import InputProcessor
 from depth_anything_3.utils.io.output_processor import OutputProcessor
