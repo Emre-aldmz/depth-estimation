@@ -1,5 +1,0 @@
-# Depth Estimation - Production Dependencies
-torch>=2.0.0
-numpy>=1.21.0
-opencv-python>=4.5.5.64
-redis>=4.0.0
