@@ -167,4 +167,4 @@ class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["capsule"] = "capsule"
     name: Literal["DepthEstimation"] = "DepthEstimation"
-    UID = "DE_1001001" 
+    UID: str = "DE_1001001" 
