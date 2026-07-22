@@ -7,7 +7,7 @@ from sdks.novavision.src.media.image import Image
 from sdks.novavision.src.base.capsule import Capsule
 from sdks.novavision.src.helper.executor import Executor
 from capsules.DepthEstimation.src.models.PackageModel import PackageModel
-from capsules.DepthEstimation.src.utils.loader import ModelLoader
+from capsules.DepthEstimation.src.utils.utils import ModelLoader
 from capsules.DepthEstimation.src.classes.DepthInference import DepthInference
 from capsules.DepthEstimation.src.utils.response import build_response_depth
 
