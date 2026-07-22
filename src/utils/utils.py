@@ -1,6 +1,12 @@
 import os
+import sys
 import torch
-from huggingface_hub import hf_hub_download 
+from huggingface_hub import hf_hub_download
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+classes_dir = os.path.abspath(os.path.join(current_dir, "../classes"))
+if classes_dir not in sys.path:
+    sys.path.append(classes_dir)
 
 try:
     from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
