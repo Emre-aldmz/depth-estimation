@@ -2,8 +2,12 @@ import os
 import torch
 from huggingface_hub import hf_hub_download 
 
-from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
-from capsules.DepthEstimation.src.classes.depth_anything_3.api import DepthAnything3
+try:
+    from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
+    from capsules.DepthEstimation.src.classes.depth_anything_3.api import DepthAnything3
+except ModuleNotFoundError:
+    from src.classes.depth_anything_v2.dpt import DepthAnythingV2
+    from src.classes.depth_anything_3.api import DepthAnything3
 
 class ModelLoader:
     def __init__(self, config: dict):
