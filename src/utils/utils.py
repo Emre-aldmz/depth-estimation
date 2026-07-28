@@ -37,8 +37,8 @@ class ModelLoader:
         
         executor_cfg = self.config.get("executor", {}).get("value", {})
         configs = executor_cfg.get("configs", {})
-        model_version_data = configs.get("configModelVersion", {})
-        selected_version = model_version_data.get("name") # "Version2" veya "Version3"
+        model_version_data = configs.get("configModelVersion", {}).get("value", {})
+        selected_version = model_version_data.get("name")
         
         if selected_version == "Version2":
             repo_id = "depth-anything/Depth-Anything-V2-Small"
