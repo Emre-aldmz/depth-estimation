@@ -8,13 +8,12 @@ class DepthInference:
         self.image_value = image_value 
         self.image_uid = image_uid
         
-        self.model = self.context.weight.get("model")
+        self.model = self.context.weight
         
         model_version_data = self.context.model_version_config.get("value", {})
         self.selected_version = model_version_data.get("name") 
 
     def run(self):
-       
         raw_image = self.image_value 
         
         with torch.no_grad():
@@ -39,8 +38,10 @@ class DepthInference:
         
         depth_colormap = cv2.applyColorMap(normalized_depth, cv2.COLORMAP_INFERNO)
         
-        self.context.depth_results = {
+        self.context.depth_results.append({
             "uid": self.image_uid,
             "raw_depth": depth.tolist(), 
             "depth_image_bgr": depth_colormap
-        }
+        })
+        
+        print(f"[BİLGİ] {self.image_uid} ID'li görselin derinlik analizi başarıyla tamamlandı!")
