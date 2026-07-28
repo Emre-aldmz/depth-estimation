@@ -26,9 +26,10 @@ class ModelLoader:
         configs = executor_cfg.get("configs", {})
         model_version_data = configs.get("configModelVersion", {}).get("value", {})
         
-        device_cfg = model_version_data.get("configDevice", {}).get("value", "CPU")
+        device_data = model_version_data.get("configDevice", {}).get("value", {})
+        device_name = device_data.get("name", "ConfigDeviceCPU")
         
-        if device_cfg == "GPU" and torch.cuda.is_available():
+        if "GPU" in device_name and torch.cuda.is_available():
             return "cuda"
         return "cpu"
 
