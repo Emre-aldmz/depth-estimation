@@ -6,6 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../'))
 from sdks.novavision.src.media.image import Image
 from sdks.novavision.src.base.capsule import Capsule
 from sdks.novavision.src.helper.executor import Executor
+
 from capsules.DepthEstimation.src.models.PackageModel import PackageModel
 from capsules.DepthEstimation.src.utils.utils import ModelLoader
 from capsules.DepthEstimation.src.classes.DepthInference import DepthInference
@@ -23,17 +24,26 @@ class DepthEstimation(Capsule):
         
         self.weight = self.bootstrap.get("model")
         self.select_device = self.bootstrap.get("device")
+        
         self.depth_results = []
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
+        """
+        Kapsül ilk yüklendiğinde bir kez çalışır.
+        Modeli indirip RAM/VRAM üzerine alır ve kullanıma hazır hale getirir.
+        """
         model_loader = ModelLoader(config=config).load_model()
         return model_loader
 
     def run(self):
+        """
+        Arayüzden (Flow) tetiklendiğinde çalışan ana inference fonksiyonu.
+        """
         img = Image.get_frame(img=self.images, redis_db=self.redis_db)
         
-        DepthInference(self, img.value, img.uID).run()
+        if img and img.value:
+            DepthInference(self, img.value, img.uID).run()
         
         packageModel = build_response_depth(context=self)
         return packageModel
