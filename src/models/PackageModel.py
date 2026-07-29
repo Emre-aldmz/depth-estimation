@@ -118,13 +118,24 @@ class ConfigModelVersion(Config):
 
     class Config:
         title = "Model Version"
-        json_schema_extra = {"shortDescription": "Select DA Version"}
+        json_schema_extra = {
+            "shortDescription": "Select DA Version",
+            "target": {"value": 0}
+        }
 
 class DepthInputs(Inputs):
     inputImage: InputImage
 
-class DepthConfigs(Configs):
+class DepthEstimationPackageConfigs(Config):
     configModelVersion: ConfigModelVersion
+
+class DepthConfigs(Config):
+    name: Literal["DepthEstimation"] = "DepthEstimation"
+    inputs: DepthInputs
+    configs: DepthEstimationPackageConfigs
+
+    class Config:
+        json_schema_extra = {"target": "configs"}
 
 class DepthOutputs(Outputs):
     outputDepthImage: OutputDepthImage
