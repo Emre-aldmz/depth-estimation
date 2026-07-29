@@ -1,5 +1,6 @@
-import cv2
 import base64
+import io
+from PIL import Image as PILImage
 from sdks.novavision.src.helper.package import PackageHelper
 from sdks.novavision.src.base.model import Image as ImageModel
 
@@ -21,8 +22,10 @@ def build_response_depth(context):
 
     for result in context.depth_results:
         
-        _, buffer = cv2.imencode('.png', result["depth_image_bgr"])
-        img_base64 = base64.b64encode(buffer).decode('utf-8')
+        img_pil = PILImage.fromarray(result["depth_image_bgr"])
+        buffer = io.BytesIO()
+        img_pil.save(buffer, format="PNG")
+        img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
         
         depth_image_obj = ImageModel(
             UID=result["uid"] + "_depth",
