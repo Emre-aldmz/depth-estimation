@@ -119,8 +119,7 @@ class ConfigModelVersion(Config):
     class Config:
         title = "Model Version"
         json_schema_extra = {
-            "shortDescription": "Select DA Version",
-            "target": {"value": 0}
+            "shortDescription": "Select DA Version"
         }
 
 class DepthInputs(Inputs):
