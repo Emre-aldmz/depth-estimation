@@ -1,6 +1,6 @@
-import cv2
 import numpy as np
 import torch
+import matplotlib.pyplot as plt
 
 class DepthInference:
     def __init__(self, context, image_value, image_uid):
@@ -36,7 +36,9 @@ class DepthInference:
         
         normalized_depth = normalized_depth.astype(np.uint8)
         
-        depth_colormap = cv2.applyColorMap(normalized_depth, cv2.COLORMAP_INFERNO)
+        # OpenCV yerine Matplotlib ile Inferno renk haritası (RGB formatında döner)
+        colormap = plt.get_cmap('inferno')
+        depth_colormap = (colormap(normalized_depth / 255.0)[..., :3] * 255).astype(np.uint8)
         
         self.context.depth_results.append({
             "uid": self.image_uid,
