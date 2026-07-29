@@ -1,6 +1,6 @@
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import  Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image
+from sdks.novavision.src.base.model import Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
@@ -34,7 +34,6 @@ class OutputDepthArray(Output):
 
     class Config:
         title = "Raw Depth Data"
-
 
 class ConfigDeviceGPU(Config):
     name: Literal["ConfigDeviceGPU"] = "ConfigDeviceGPU"
@@ -125,16 +124,9 @@ class ConfigModelVersion(Config):
 class DepthInputs(Inputs):
     inputImage: InputImage
 
-class DepthEstimationPackageConfigs(Config):
-    configModelVersion: ConfigModelVersion
-
+# Çift katmanı kaldıran temiz sarıcı sınıfımız
 class DepthConfigs(Config):
-    name: Literal["DepthEstimation"] = "DepthEstimation"
-    inputs: DepthInputs
-    configs: DepthEstimationPackageConfigs
-
-    class Config:
-        json_schema_extra = {"target": "configs"}
+    configModelVersion: ConfigModelVersion
 
 class DepthOutputs(Outputs):
     outputDepthImage: OutputDepthImage
@@ -178,4 +170,4 @@ class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["capsule"] = "capsule"
     name: Literal["DepthEstimation"] = "DepthEstimation"
-    UID: str = "DE_1001001" 
+    UID: str = "DE_1001001"
