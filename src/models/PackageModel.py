@@ -124,8 +124,7 @@ class ConfigModelVersion(Config):
 class DepthInputs(Inputs):
     inputImage: InputImage
 
-# Çift katmanı kaldıran temiz sarıcı sınıfımız
-class DepthConfigs(Config):
+class DepthConfigs(Configs):
     configModelVersion: ConfigModelVersion
 
 class DepthOutputs(Outputs):
@@ -161,7 +160,8 @@ class ConfigExecutor(Config):
 
     class Config:
         title = "Task"
-        json_schema_extra = {"target": "value"} 
+        # DİKKAT: Buradaki json_schema_extra = {"target": "value"} satırı SİLİNDİ!
+        # Arayüzün kilitlenmesine sebep olan ana faktör buydu.
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
@@ -170,4 +170,4 @@ class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["capsule"] = "capsule"
     name: Literal["DepthEstimation"] = "DepthEstimation"
-    UID: str = "DE_1001001"
+    UID: str = "DE_1001001" 
