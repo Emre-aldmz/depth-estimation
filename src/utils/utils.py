@@ -8,12 +8,23 @@ classes_dir = os.path.abspath(os.path.join(current_dir, "../classes"))
 if classes_dir not in sys.path:
     sys.path.append(classes_dir)
 
+# V2 Import (Bağımsız Güvenli Blok)
 try:
     from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
+except ModuleNotFoundError:
+    try:
+        from src.classes.depth_anything_v2.dpt import DepthAnythingV2
+    except ModuleNotFoundError:
+        pass
+
+# V3 Import (Bağımsız Güvenli Blok - omegaconf hatasını yutar ve çökmeyi engeller)
+try:
     from capsules.DepthEstimation.src.classes.depth_anything_3.api import DepthAnything3
 except ModuleNotFoundError:
-    from src.classes.depth_anything_v2.dpt import DepthAnythingV2
-    from src.classes.depth_anything_3.api import DepthAnything3
+    try:
+        from src.classes.depth_anything_3.api import DepthAnything3
+    except ModuleNotFoundError:
+        pass
 
 class ModelLoader:
     def __init__(self, config: dict):
@@ -59,3 +70,4 @@ class ModelLoader:
             "model": self.model,
             "device": self.device
         }
+
