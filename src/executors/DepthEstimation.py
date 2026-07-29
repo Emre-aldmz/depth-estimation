@@ -42,7 +42,8 @@ class DepthEstimation(Capsule):
         """
         img = Image.get_frame(img=self.images, redis_db=self.redis_db)
         
-        if img and img.value:
+        # DİKKAT: Numpy Array truth value hatasını çözmek için 'is not None' eklendi!
+        if img and img.value is not None:
             DepthInference(self, img.value, img.uID).run()
         
         packageModel = build_response_depth(context=self)
