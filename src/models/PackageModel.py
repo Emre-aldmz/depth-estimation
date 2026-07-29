@@ -22,7 +22,7 @@ class InputImage(Input):
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
     value: Union[List[Image], Image]
-    type: Literal["Images"] = "Images"
+    type: Literal["object"] = "object" 
 
     class Config:
         title = "Depth Map Image"
