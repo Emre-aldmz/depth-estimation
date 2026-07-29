@@ -10,9 +10,8 @@ class DepthInference:
         
         self.model = self.context.weight
         
-        model_version_data = self.context.model_version_config.get("value", {})
-        self.selected_version = model_version_data.get("name") 
-
+        self.selected_version = self.context.model_version_config
+        
     def run(self):
         raw_image = self.image_value 
         
@@ -36,7 +35,6 @@ class DepthInference:
         
         normalized_depth = normalized_depth.astype(np.uint8)
         
-        # OpenCV yerine Matplotlib ile Inferno renk haritası (RGB formatında döner)
         colormap = plt.get_cmap('inferno')
         depth_colormap = (colormap(normalized_depth / 255.0)[..., :3] * 255).astype(np.uint8)
         
@@ -47,3 +45,4 @@ class DepthInference:
         })
         
         print(f"[BİLGİ] {self.image_uid} ID'li görselin derinlik analizi başarıyla tamamlandı!")
+
