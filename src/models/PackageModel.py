@@ -149,6 +149,11 @@ class DepthEstimationExecutor(Config):
 
     class Config:
         title = "Depth Estimation"
+        json_schema_extra = {
+            "target": {
+                "value": 0
+            }
+        }
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
@@ -159,6 +164,9 @@ class ConfigExecutor(Config):
 
     class Config:
         title = "Task"
+        json_schema_extra = {
+            "target": "value"
+        }
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
@@ -167,4 +175,4 @@ class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["capsule"] = "capsule"
     name: Literal["DepthEstimation"] = "DepthEstimation"
-    UID: str = "DE_1001001" 
+    UID: str = "DE_1001001"
