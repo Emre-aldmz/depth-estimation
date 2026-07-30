@@ -149,7 +149,6 @@ class DepthEstimationExecutor(Config):
 
     class Config:
         title = "Depth Estimation"
-        json_schema_extra = {"target": {"value": 0}}
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
@@ -160,8 +159,6 @@ class ConfigExecutor(Config):
 
     class Config:
         title = "Task"
-        # DİKKAT: Buradaki json_schema_extra = {"target": "value"} satırı SİLİNDİ!
-        # Arayüzün kilitlenmesine sebep olan ana faktör buydu.
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
