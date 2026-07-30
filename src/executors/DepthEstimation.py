@@ -1,9 +1,11 @@
 import os
 import sys
+import uuid
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../'))
 
-from sdks.novavision.src.media.image import Image
+from sdks.novavision.src.base.model import Image as ImageModel
+from sdks.novavision.src.media.image import Image as ImageHelper
 from sdks.novavision.src.base.capsule import Capsule
 from sdks.novavision.src.helper.executor import Executor
 
@@ -29,22 +31,31 @@ class DepthEstimation(Capsule):
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
-        """
-        Kapsül ilk yüklendiğinde bir kez çalışır.
-        Modeli indirip RAM/VRAM üzerine alır ve kullanıma hazır hale getirir.
-        """
         model_loader = ModelLoader(config=config).load_model()
         return model_loader
 
     def run(self):
-        """
-        Arayüzden (Flow) tetiklendiğinde çalışan ana inference fonksiyonu.
-        """
-        img = Image.get_frame(img=self.images, redis_db=self.redis_db)
+        img = ImageHelper.get_frame(img=self.images, redis_db=self.redis_db)
         
-        # DİKKAT: Numpy Array truth value hatasını çözmek için 'is not None' eklendi!
         if img and img.value is not None:
             DepthInference(self, img.value, img.uID).run()
+        
+        for result in self.depth_results:
+            depth_numpy = result["depth_image_bgr"]
+            depth_bgr = depth_numpy[:, :, ::-1].copy()
+            
+            img_uID = str(uuid.uuid4())
+            depth_img = ImageModel(
+                name="DepthMap_" + img_uID,
+                uID=img_uID,
+                mimeType="image/png",
+                encoding="bytes",
+                value=depth_bgr,
+                r_key='',
+                type="Image"
+            )
+            depth_img = ImageHelper.set_frame(img=depth_img, package_uID=self.uID, redis_db=self.redis_db)
+            result["depth_image_model"] = depth_img
         
         packageModel = build_response_depth(context=self)
         return packageModel
