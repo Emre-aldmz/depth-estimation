@@ -13,6 +13,7 @@ classes_dir = os.path.abspath(os.path.join(current_dir, "../classes"))
 if classes_dir not in sys.path:
     sys.path.append(classes_dir)
 
+# V2 Import (Bağımsız Güvenli Blok)
 try:
     from capsules.DepthEstimation.src.classes.depth_anything_v2.dpt import DepthAnythingV2
 except Exception:
@@ -21,6 +22,7 @@ except Exception:
     except Exception:
         DepthAnythingV2 = None
 
+# V3 Import (Bağımsız Güvenli Blok)
 try:
     from capsules.DepthEstimation.src.classes.depth_anything_3.api import DepthAnything3
 except Exception:
@@ -45,7 +47,6 @@ class ModelLoader:
 
     def load_model(self) -> dict:
         self.device = self._determine_device()
-
         selected_version = self.application.get_param(config=self.config, name="ConfigModelVersion")
 
         logger.info(f"DepthEstimation - Loading model: version={selected_version}, device={self.device}")
@@ -64,7 +65,7 @@ class ModelLoader:
             self.model = DepthAnything3.from_pretrained("depth-anything/DA3-SMALL")
             self.model = self.model.to(device=torch.device(self.device))
 
-        logger.info(f"DepthEstimation - Model loaded successfully: {type(self.model)}")
+        logger.info(f"DepthEstimation - Model loaded: {type(self.model)}")
 
         return {
             "model": self.model,
