@@ -54,6 +54,3 @@ class DepthInference:
             "raw_depth": depth_stats,
             "depth_image_bgr": depth_colormap
         })
-        
-        print(f"[BİLGİ] {self.image_uid} ID'li görselin derinlik analizi başarıyla tamamlandı!")
-
