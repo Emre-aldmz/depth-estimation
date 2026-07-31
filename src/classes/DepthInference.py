@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-
 class DepthInference:
     def __init__(self, context, image_value, image_uid):
         self.context = context
@@ -16,15 +15,15 @@ class DepthInference:
         raw_image = self.image_value 
         
         with torch.no_grad():
-            if self.selected_version == "Version2":
+            if self.selected_version.startswith("V2"):
                 depth = self.model.infer_image(raw_image)
             
-            elif self.selected_version == "Version3":
-                depth = self.model.infer_image(raw_image)
+            elif self.selected_version.startswith("V3"):
+                prediction = self.model.inference([raw_image])
+                depth = prediction.depth[0] 
             
             else:
                 depth = np.zeros((raw_image.shape[0], raw_image.shape[1]), dtype=np.float32)
-
         depth_min = float(depth.min())
         depth_max = float(depth.max())
         depth_mean = float(depth.mean())
