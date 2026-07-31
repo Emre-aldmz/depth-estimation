@@ -22,19 +22,10 @@ class InputImage(Input):
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
     value: Union[List[Image], Image]
-    type: str = "object" 
+    type: Literal["bytes"] = "bytes"
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
     publish: Literal["stream"] = "stream" 
-
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
-        return "object"
 
     class Config:
         title = "Depth Map Image"
@@ -202,4 +193,3 @@ class PackageModel(Package):
     type: Literal["capsule"] = "capsule"
     name: Literal["DepthEstimation"] = "DepthEstimation"
     UID: str = "DE_1001001"
-
