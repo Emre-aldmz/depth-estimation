@@ -18,7 +18,7 @@ from capsules.DepthEstimation.src.models.PackageModel import (
 
 def build_response_depth(context):
 
-    results = context.depth_results
+    results = context.depth_results[0]
     
     depth_img_bgr = results['depth_image_bgr']
     
