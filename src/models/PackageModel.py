@@ -21,8 +21,8 @@ class InputImage(Input):
 
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
-    value: Union[List[Image], Image]
-    type: Literal["bytes"] = "bytes"
+    value: Image  
+    type: Literal["bytes"] = "bytes"  
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
     publish: Literal["stream"] = "stream" 
