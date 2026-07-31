@@ -22,7 +22,7 @@ class InputImage(Input):
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
     value: Image  
-    type: Literal["Image"] = "Image"  
+    type: Literal["Images"] = "Images"  
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
     publish: Literal["stream"] = "stream" 
