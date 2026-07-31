@@ -1,6 +1,6 @@
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image
+from sdks.novavision.src.base.model import Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image, Images
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
@@ -21,8 +21,8 @@ class InputImage(Input):
 
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
-    value: Image  
-    type: Literal["Images"] = "Images"  
+    value: Images  
+    type: Literal["Images"] = "Images" 
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
     publish: Literal["stream"] = "stream" 
