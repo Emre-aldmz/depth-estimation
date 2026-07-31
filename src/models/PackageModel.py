@@ -6,7 +6,7 @@ class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
     value: Union[List[Image], Image]
     type: str = "object"
-
+    
     @validator("type", pre=True, always=True)
     def set_type_based_on_value(cls, value, values):
         value = values.get('value')
@@ -15,23 +15,23 @@ class InputImage(Input):
         elif isinstance(value, list):
             return "list"
         return "object"
-
+        
     class Config:
         title = "Image"
-
+        
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
     value: Union[List[Image], Image]
     type: Literal["object"] = "object" 
-
+    
     class Config:
         title = "Depth Map Image"
-
+        
 class OutputDepthArray(Output):
     name: Literal["outputDepthArray"] = "outputDepthArray"
     value: list
     type: Literal["list"] = "list"
-
+    
     class Config:
         title = "Raw Depth Data"
 
@@ -40,104 +40,116 @@ class ConfigDeviceGPU(Config):
     value: Literal["GPU"] = "GPU"
     type: Literal["string"] = "string"
     field: Literal["option"] = "option"
-
+    
     class Config:
         title = "GPU (CUDA)"
-
+        
 class ConfigDeviceCPU(Config):
     name: Literal["ConfigDeviceCPU"] = "ConfigDeviceCPU"
     value: Literal["CPU"] = "CPU"
     type: Literal["string"] = "string"
     field: Literal["option"] = "option"
-
+    
     class Config:
         title = "CPU"
-
+        
 class ConfigDevice(Config):
     name: Literal["ConfigDevice"] = "ConfigDevice"
     value: Union[ConfigDeviceCPU, ConfigDeviceGPU]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
-
+    
     class Config:
         title = "Device"
         json_schema_extra = {"shortDescription": "Processing Device"}
 
-class DepthModelV3(Config):
-    """ Depth Anything V3 - Small """
-    name: Literal["DepthModelV3"] = "DepthModelV3"
-    value: str = "da3_small.pth"
-    type: Literal["string"] = "string"
-    field: Literal["textInput"] = "textInput"
-    restart: Literal[True] = True
-
-    class Config:
-        title = "V3 Model Path"
-
-class ModelVersionV3(Config):
-    depthModel: DepthModelV3
-    configDevice: ConfigDevice
-    name: Literal["Version3"] = "Version3"
-    value: Literal["Version3"] = "Version3"
+class ModelVersionV2Small(Config):
+    name: Literal["V2_Small"] = "V2_Small"
+    value: Literal["V2_Small"] = "V2_Small"
     type: Literal["string"] = "string"
     field: Literal["option"] = "option"
-
+    
     class Config:
-        title = "Depth Anything V3"
-
-class DepthModelV2(Config):
-    """ Depth Anything V2 - Small """
-    name: Literal["DepthModelV2"] = "DepthModelV2"
-    value: str = "da2_small.pth"
-    type: Literal["string"] = "string"
-    field: Literal["textInput"] = "textInput"
-    restart: Literal[True] = True
-
-    class Config:
-        title = "V2 Model Path"
-
-class ModelVersionV2(Config):
-    depthModel: DepthModelV2
-    configDevice: ConfigDevice
-    name: Literal["Version2"] = "Version2"
-    value: Literal["Version2"] = "Version2"
+        title = "V2 Small (24M params)"
+        
+class ModelVersionV2Base(Config):
+    name: Literal["V2_Base"] = "V2_Base"
+    value: Literal["V2_Base"] = "V2_Base"
     type: Literal["string"] = "string"
     field: Literal["option"] = "option"
-
+    
     class Config:
-        title = "Depth Anything V2"
+        title = "V2 Base (97M params)"
+        
+class ModelVersionV2Large(Config):
+    name: Literal["V2_Large"] = "V2_Large"
+    value: Literal["V2_Large"] = "V2_Large"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+    
+    class Config:
+        title = "V2 Large (335M params)"
+
+class ModelVersionV3Small(Config):
+    name: Literal["V3_Small"] = "V3_Small"
+    value: Literal["V3_Small"] = "V3_Small"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+    
+    class Config:
+        title = "V3 Small (24M params)"
+        
+class ModelVersionV3Base(Config):
+    name: Literal["V3_Base"] = "V3_Base"
+    value: Literal["V3_Base"] = "V3_Base"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+    
+    class Config:
+        title = "V3 Base (97M params)"
+        
+class ModelVersionV3Large(Config):
+    name: Literal["V3_Large"] = "V3_Large"
+    value: Literal["V3_Large"] = "V3_Large"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+    
+    class Config:
+        title = "V3 Large (335M params)"
 
 class ConfigModelVersion(Config):
     name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
-    value: Union[ModelVersionV3, ModelVersionV2]
+    value: Union[
+        ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large,
+        ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large
+    ]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
-
+    
     class Config:
         title = "Model Version"
-        json_schema_extra = {
-            "shortDescription": "Select DA Version"
-        }
+        json_schema_extra = {"shortDescription": "Select Depth Model"}
 
 class DepthInputs(Inputs):
     inputImage: InputImage
-
+    
 class DepthConfigs(Configs):
     configModelVersion: ConfigModelVersion
-
+    configDevice: ConfigDevice
+    
 class DepthOutputs(Outputs):
     outputDepthImage: OutputDepthImage
     outputDepthArray: OutputDepthArray
-
+    
 class DepthRequest(Request):
     inputs: Optional[DepthInputs]
     configs: DepthConfigs
-
+    
     class Config:
         json_schema_extra = {"target": "configs"}
-
+        
 class DepthResponse(Response):
     outputs: DepthOutputs
 
@@ -146,7 +158,7 @@ class DepthEstimationExecutor(Config):
     value: Union[DepthRequest, DepthResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
-
+    
     class Config:
         title = "Depth Estimation"
         json_schema_extra = {
@@ -154,23 +166,21 @@ class DepthEstimationExecutor(Config):
                 "value": 0
             }
         }
-
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
     value: Union[DepthEstimationExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
-
+    
     class Config:
         title = "Task"
         json_schema_extra = {
             "target": "value"
         }
-
 class PackageConfigs(Configs):
     executor: ConfigExecutor
-
+    
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["capsule"] = "capsule"
