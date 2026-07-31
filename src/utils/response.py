@@ -1,4 +1,10 @@
+import cv2
+import base64
+import numpy as np
 from sdks.novavision.src.helper.package import PackageHelper
+from sdks.novavision.src.base.model import Image as ImageModel
+from sdks.novavision.src.media.image import Image as SDKImage
+
 from capsules.DepthEstimation.src.models.PackageModel import (
     PackageModel, 
     PackageConfigs, 
@@ -11,16 +17,26 @@ from capsules.DepthEstimation.src.models.PackageModel import (
 )
 
 def build_response_depth(context):
+
+    results = context.depth_results
     
-    if context.depth_results:
-        result = context.depth_results[0]
-        
-        # set_frame ile Redis'e yazılmış ImageModel objesini doğrudan kullan
-        out_image = OutputDepthImage(value=result["depth_image_model"])
-        out_array = OutputDepthArray(value=result["raw_depth"])
-    else:
-        out_image = OutputDepthImage(value=[])
-        out_array = OutputDepthArray(value=[])
+    depth_img_bgr = results["depth_image_bgr"]
+    
+    depth_image_obj = ImageModel(
+        UID=results["uid"] + "_depth",
+        name="outputDepthImage",
+        mimeType="image/jpeg",
+        encoding="bytes",
+        value=depth_img_bgr,
+        r_key="",
+        shape_key=b"",
+        type="Image"
+    )
+    
+    depth_image_obj = SDKImage.set_frame(img=depth_image_obj, package_uID=context.uID, redis_db=context.redis_db)
+    
+    out_image = OutputDepthImage(value=depth_image_obj)
+    out_array = OutputDepthArray(value=results["raw_depth"])
     
     depth_outputs = DepthOutputs(outputDepthImage=out_image, outputDepthArray=out_array)
     depth_response = DepthResponse(outputs=depth_outputs)
