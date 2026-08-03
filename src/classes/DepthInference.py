@@ -9,12 +9,14 @@ class DepthInference:
         self.image_uid = image_uid
         
         self.model = self.context.weight
-        
         self.selected_version = self.context.model_version_config
         
     def run(self):
         raw_image = self.image_value 
         
+        if raw_image.dtype != np.uint8:
+            raw_image = (raw_image * 255).astype(np.uint8) if raw_image.max() <= 1.0 else raw_image.astype(np.uint8)
+            
         with torch.no_grad():
             if self.selected_version.startswith("V2"):
                 depth = self.model.infer_image(raw_image)
@@ -25,6 +27,7 @@ class DepthInference:
             
             else:
                 depth = np.zeros((raw_image.shape[0], raw_image.shape[1]), dtype=np.float32)
+                
         depth_min = float(depth.min())
         depth_max = float(depth.max())
         depth_mean = float(depth.mean())
