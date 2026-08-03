@@ -33,10 +33,22 @@ class DepthEstimation(Capsule):
     def run(self):
         import traceback
         try:
-            print(f'DEBUG: self.images = {type(self.images)} {self.images}', flush=True)
-            img = Image.get_frame(img=self.images, redis_db=self.redis_db)
+            if isinstance(self.images, list):
+                temp_images = dict(self.images[0]) if isinstance(self.images[0], dict) else self.images[0]
+            elif isinstance(self.images, dict):
+                temp_images = dict(self.images)
+            else:
+                temp_images = self.images
+                
+            if isinstance(temp_images, dict):
+                temp_images.pop('timestamp', None)
+                temp_images.pop('metadata', None)
+                
+            img = Image.get_frame(img=temp_images, redis_db=self.redis_db)
+            
             DepthInference(self, img.value, img.uID).run()
             packageModel = build_response_depth(context=self)
+            
             return packageModel
         except Exception as e:
             traceback.print_exc()
