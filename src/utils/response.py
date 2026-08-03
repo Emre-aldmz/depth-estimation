@@ -32,6 +32,12 @@ def build_response_depth(context):
         shape_key=b'',
         type='Image'
     )
+
+    original_image = context.images[0]
+    if hasattr(original_image, 'timestamp'):
+        setattr(depth_image_obj, 'timestamp', getattr(original_image, 'timestamp'))
+    if hasattr(original_image, 'metadata'):
+        setattr(depth_image_obj, 'metadata', getattr(original_image, 'metadata'))
     
     depth_image_obj = SDKImage.set_frame(img=depth_image_obj, package_uID=context.uID, redis_db=context.redis_db)
     
