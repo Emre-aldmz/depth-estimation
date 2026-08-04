@@ -21,11 +21,11 @@ class InputImage(Input):
 
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
-    value: Image  
-    type: Literal["Images"] = "Images"  
+    value: Image
+    type: Literal["Images"] = "Images"
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
-    publish: Literal["stream"] = "stream" 
+    publish: Literal["stream"] = "stream"
 
     class Config:
         title = "Depth Map Image"
@@ -76,7 +76,7 @@ class ModelVersionV2Small(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V2 Small (24M params)"
+        title = "dev2_small"
 
 class ModelVersionV2Base(Config):
     name: Literal["V2_Base"] = "V2_Base"
@@ -85,7 +85,7 @@ class ModelVersionV2Base(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V2 Base (97M params)"
+        title = "dev2_base"
 
 class ModelVersionV2Large(Config):
     name: Literal["V2_Large"] = "V2_Large"
@@ -94,7 +94,7 @@ class ModelVersionV2Large(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V2 Large (335M params)"
+        title = "dev2_large"
 
 class ModelVersionV3Small(Config):
     name: Literal["V3_Small"] = "V3_Small"
@@ -103,7 +103,7 @@ class ModelVersionV3Small(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V3 Small (24M params)"
+        title = "dev3_small"
 
 class ModelVersionV3Base(Config):
     name: Literal["V3_Base"] = "V3_Base"
@@ -112,7 +112,7 @@ class ModelVersionV3Base(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V3 Base (97M params)"
+        title = "dev3_base"
 
 class ModelVersionV3Large(Config):
     name: Literal["V3_Large"] = "V3_Large"
@@ -121,14 +121,31 @@ class ModelVersionV3Large(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "V3 Large (335M params)"
+        title = "dev3_large"
+
+class DepthAnythingV2(Config):
+    name: Literal["DepthAnythingV2"] = "DepthAnythingV2"
+    value: Union[ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "DepthAnythingV2"
+
+class DepthAnythingV3(Config):
+    name: Literal["DepthAnythingV3"] = "DepthAnythingV3"
+    value: Union[ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "DepthAnythingV3"
 
 class ConfigModelVersion(Config):
     name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
-    value: Union[
-        ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large,
-        ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large
-    ]
+    value: Union[DepthAnythingV2, DepthAnythingV3]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
