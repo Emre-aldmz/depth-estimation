@@ -196,7 +196,26 @@ class ModelLoader:
 
     def load_model(self) -> dict:
         self.device = self._determine_device()
-        selected_model = self.application.get_param(config=self.config, name="ConfigModelVersion")
+        
+        def get_deep_param(cfg, target_name):
+            if isinstance(cfg, dict):
+                if cfg.get("name") == target_name:
+                    val = cfg
+                    while isinstance(val.get("value"), dict):
+                        val = val["value"]
+                    return val.get("value") if val.get("field") == "option" else val.get("name")
+                for v in cfg.values():
+                    res = get_deep_param(v, target_name)
+                    if res: return res
+            elif isinstance(cfg, list):
+                for item in cfg:
+                    res = get_deep_param(item, target_name)
+                    if res: return res
+            return None
+
+        selected_model = get_deep_param(self.config, "ConfigModelVersion")
+        if not selected_model:
+            selected_model = self.application.get_param(config=self.config, name="ConfigModelVersion")
 
         logger.info(f"DepthEstimation - Loading model: key={selected_model}, device={self.device}")
 
@@ -216,4 +235,3 @@ class ModelLoader:
             "model": self.model,
             "device": self.device
         }
-
