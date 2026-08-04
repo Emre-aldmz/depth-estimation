@@ -18,10 +18,10 @@ class DepthInference:
             raw_image = (raw_image * 255).astype(np.uint8) if raw_image.max() <= 1.0 else raw_image.astype(np.uint8)
             
         with torch.no_grad():
-            if self.selected_version.startswith("V2"):
+            if "V2" in self.selected_version:
                 depth = self.model.infer_image(raw_image)
             
-            elif self.selected_version.startswith("V3"):
+            elif "V3" in self.selected_version:
                 prediction = self.model.inference([raw_image])
                 depth = prediction.depth[0] 
             
