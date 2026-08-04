@@ -1,8 +1,6 @@
-
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
-
+from sdks.novavision.src.base.model import Package, Inputs, Configs, Outputs, Response, Request, Output, Input, Config, Image
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
@@ -16,122 +14,187 @@ class InputImage(Input):
             return "object"
         elif isinstance(value, list):
             return "list"
+        return "object"
 
     class Config:
         title = "Image"
 
-
-class OutputImage(Output):
-    name: Literal["outputImage"] = "outputImage"
-    value: Union[List[Image],Image]
-    type: str = "object"
-
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
+class OutputDepthImage(Output):
+    name: Literal["outputDepthImage"] = "outputDepthImage"
+    value: Image
+    type: Literal["Images"] = "Images"
+    listen: Literal["continuous"] = "continuous"
+    branch: Literal["forward"] = "forward"
+    publish: Literal["stream"] = "stream"
 
     class Config:
-        title = "Image"
+        title = "Depth Map Image"
 
+class OutputDepthArray(Output):
+    name: Literal["outputDepthArray"] = "outputDepthArray"
+    value: list
+    type: Literal["list"] = "list"
+    listen: Literal["continuous"] = "continuous"
+    branch: Literal["forward"] = "forward"
 
-class KeepSideFalse(Config):
-    name: Literal["False"] = "False"
-    value: Literal[False] = False
-    type: Literal["bool"] = "bool"
+    class Config:
+        title = "Raw Depth Data"
+
+class ConfigDeviceGPU(Config):
+    name: Literal["ConfigDeviceGPU"] = "ConfigDeviceGPU"
+    value: Literal["GPU"] = "GPU"
+    type: Literal["string"] = "string"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Disable"
+        title = "GPU (CUDA)"
 
-
-class KeepSideTrue(Config):
-    name: Literal["True"] = "True"
-    value: Literal[True] = True
-    type: Literal["bool"] = "bool"
+class ConfigDeviceCPU(Config):
+    name: Literal["ConfigDeviceCPU"] = "ConfigDeviceCPU"
+    value: Literal["CPU"] = "CPU"
+    type: Literal["string"] = "string"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Enable"
+        title = "CPU"
 
-
-class KeepSideBBox(Config):
-    """
-        Rotate image without catting off sides.
-    """
-    name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
+class ConfigDevice(Config):
+    name: Literal["ConfigDevice"] = "ConfigDevice"
+    value: Union[ConfigDeviceCPU, ConfigDeviceGPU]
     type: Literal["object"] = "object"
-    field: Literal["dropdownlist"] = "dropdownlist"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
 
     class Config:
-        title = "Keep Sides"
+        title = "Device"
+        json_schema_extra = {"shortDescription": "Processing Device"}
 
-
-class Degree(Config):
-    """
-        Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
-    """
-    name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-    placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
+class ModelVersionV2Small(Config):
+    name: Literal["V2_Small"] = "V2_Small"
+    value: Literal["V2_Small"] = "V2_Small"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
 
     class Config:
-        title = "Angle"
+        title = "dev2_small"
 
+class ModelVersionV2Base(Config):
+    name: Literal["V2_Base"] = "V2_Base"
+    value: Literal["V2_Base"] = "V2_Base"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
 
-class PackageInputs(Inputs):
+    class Config:
+        title = "dev2_base"
+
+class ModelVersionV2Large(Config):
+    name: Literal["V2_Large"] = "V2_Large"
+    value: Literal["V2_Large"] = "V2_Large"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "dev2_large"
+
+class ModelVersionV3Small(Config):
+    name: Literal["V3_Small"] = "V3_Small"
+    value: Literal["V3_Small"] = "V3_Small"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "dev3_small"
+
+class ModelVersionV3Base(Config):
+    name: Literal["V3_Base"] = "V3_Base"
+    value: Literal["V3_Base"] = "V3_Base"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "dev3_base"
+
+class ModelVersionV3Large(Config):
+    name: Literal["V3_Large"] = "V3_Large"
+    value: Literal["V3_Large"] = "V3_Large"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "dev3_large"
+
+class DepthAnythingV2(Config):
+    name: Literal["DepthAnythingV2"] = "DepthAnythingV2"
+    value: Union[ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "DepthAnythingV2"
+
+class DepthAnythingV3(Config):
+    name: Literal["DepthAnythingV3"] = "DepthAnythingV3"
+    value: Union[ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "DepthAnythingV3"
+
+class ConfigModelVersion(Config):
+    name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
+    value: Union[DepthAnythingV2, DepthAnythingV3]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "Model Version"
+        json_schema_extra = {"shortDescription": "Select Depth Model"}
+
+class DepthInputs(Inputs):
     inputImage: InputImage
 
+class DepthConfigs(Configs):
+    configModelVersion: ConfigModelVersion
+    configDevice: ConfigDevice
 
-class PackageConfigs(Configs):
-    degree: Degree
-    drawBBox: KeepSideBBox
+class DepthOutputs(Outputs):
+    outputDepthImage: OutputDepthImage
+    outputDepthArray: OutputDepthArray
 
-
-class PackageOutputs(Outputs):
-    outputImage: OutputImage
-
-
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+class DepthRequest(Request):
+    inputs: Optional[DepthInputs]
+    configs: DepthConfigs
 
     class Config:
-        json_schema_extra = {
-            "target": "configs"
-        }
+        json_schema_extra = {"target": "configs"}
 
+class DepthResponse(Response):
+    outputs: DepthOutputs
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
-
-
-class PackageExecutor(Config):
-    name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+class DepthEstimationExecutor(Config):
+    name: Literal["DepthEstimation"] = "DepthEstimation"
+    value: Union[DepthRequest, DepthResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
+        title = "Depth Estimation"
         json_schema_extra = {
             "target": {
                 "value": 0
             }
         }
 
-
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[DepthEstimationExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
 
     class Config:
         title = "Task"
@@ -139,12 +202,11 @@ class ConfigExecutor(Config):
             "target": "value"
         }
 
-
 class PackageConfigs(Configs):
     executor: ConfigExecutor
 
-
 class PackageModel(Package):
     configs: PackageConfigs
-    type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    type: Literal["capsule"] = "capsule"
+    name: Literal["DepthEstimation"] = "DepthEstimation"
+    UID: str = "DE_1001001"
