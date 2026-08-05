@@ -132,6 +132,7 @@ class DepthAnythingV2(Config):
 
     class Config:
         title = "Version 2"
+        json_schema_extra = {"shortDescription": "Select Model Size"}
 
 class DepthAnythingV3(Config):
     name: Literal["DepthAnythingV3"] = "DepthAnythingV3"
@@ -142,6 +143,7 @@ class DepthAnythingV3(Config):
 
     class Config:
         title = "Version 3"
+        json_schema_extra = {"shortDescription": "Select Model Size"}
 
 class ConfigModelVersion(Config):
     name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
