@@ -26,11 +26,11 @@ def build_response_depth(context):
         encoding='bytes',
         value=depth_img_bgr,
         r_key='',
-        shape_key=b'',
+        shape_key=np.array(depth_img_bgr.shape),
         type='Image'
     )
     
-    depth_image_obj = SDKImage.set_frame(img=depth_image_obj, package_uID=context.uID, redis_db=context.redis_db)
+    depth_image_obj = SDKImage.encode64(depth_image_obj)
     
     out_image = OutputDepthImage(value=depth_image_obj)
     out_array = OutputDepthArray(value=results['raw_depth'])
