@@ -22,7 +22,7 @@ MODEL_REGISTRY = {
         "encoder": "vits",
         "features": 64,
         "out_channels": [48, 96, 192, 384],
-        "drive_id": "1xLfZ8wbbgeNFlFBsmwQXPC15ryYuppCP",
+        "drive_id": "1cCxGyFjnMN9ymjed-UZVY91zVG2eNeZA",
         "filename": "da2_vits.pth",
     },
     "V2_Base": {
@@ -30,7 +30,7 @@ MODEL_REGISTRY = {
         "encoder": "vitb",
         "features": 128,
         "out_channels": [96, 192, 384, 768],
-        "drive_id": "1aFtb4M3885dZFUJpb4xFJvutYPYuGm-1",
+        "drive_id": "1Q7QvcD-4ZNVhJ2S4RSARne7H3lHGG33v",
         "filename": "da2_vitb.pth",
     },
     "V2_Large": {
@@ -38,13 +38,13 @@ MODEL_REGISTRY = {
         "encoder": "vitl",
         "features": 256,
         "out_channels": [256, 512, 1024, 1024],
-        "drive_id": "1FN53WqHKl5VrZx-bRg190eZTVmWSiJfd",
+        "drive_id": "1_5EW3qbc_ubGea7dimDegNzSbyALRL1I",
         "filename": "da2_vitl.pth",
     },
     "V3_Small": {
         "version": "v3",
         "model_name": "da3-small",
-        "drive_id": "1RTlRxlLlcInRZOi9JVFzCZmx_vsEp6x0",
+        "drive_id": "1mtUx9ZgxkCMUaqxfDCEYjFjBrXbYSKdM",
         "config_json": {
             "model_name": "da3-small",
             "config": {
@@ -72,7 +72,7 @@ MODEL_REGISTRY = {
     "V3_Base": {
         "version": "v3",
         "model_name": "da3-base",
-        "drive_id": "1J7Xty8VBzek1cLi4HEvklB4jizI-KrIX",
+        "drive_id": "1HEwsHEnJQ77x3AGlbsuwg0E9QjRZbtH5",
         "config_json": {
             "model_name": "da3-base",
             "config": {
@@ -100,7 +100,7 @@ MODEL_REGISTRY = {
     "V3_Large": {
         "version": "v3",
         "model_name": "da3-large",
-        "drive_id": "1P4AX22xXfidrXAU3P_3AFif54EmTQTQ8",
+        "drive_id": "1B7B-w7wwQ-7aj4vvyq_nchmABCWwbxBY",
         "config_json": {
             "model_name": "da3-large",
             "config": {
