@@ -43,6 +43,8 @@ class DepthInference:
         
         depth_stats = [
             {
+                "Fotoğraf UID": self.image_uid,
+                "Derinlik Verisi": f"Min: {round(depth_min, 2)} | Max: {round(depth_max, 2)} | Ortalama: {round(depth_mean, 2)}",
                 "Image ID": self.image_uid,
                 "Min Depth": round(depth_min, 4),
                 "Max Depth": round(depth_max, 4),
