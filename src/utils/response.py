@@ -27,7 +27,7 @@ def build_response_depth(context):
     depth_image_obj = ImageModel(
         uID=results['uid'] + '_depth',
         name='outputDepthImage',
-        mimeType='image/jpeg',
+        mimeType='image/jpg',
         encoding='base64',
         value=img_base64,
         type='Image'
