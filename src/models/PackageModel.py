@@ -125,7 +125,7 @@ class ModelVersionV3Large(Config):
 
 class DepthAnythingV2(Config):
     name: Literal["DepthAnythingV2"] = "DepthAnythingV2"
-    value: Union[ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large] = ModelVersionV2Small()
+    value: Union[ModelVersionV2Small, ModelVersionV2Base, ModelVersionV2Large]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
@@ -136,7 +136,7 @@ class DepthAnythingV2(Config):
 
 class DepthAnythingV3(Config):
     name: Literal["DepthAnythingV3"] = "DepthAnythingV3"
-    value: Union[ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large] = ModelVersionV3Small()
+    value: Union[ModelVersionV3Small, ModelVersionV3Base, ModelVersionV3Large]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
     restart: Literal[True] = True
