@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import cv2
+import json
 
 class DepthInference:
     def __init__(self, context, image_value, image_uid):
@@ -41,17 +42,16 @@ class DepthInference:
         
         depth_colormap = cv2.applyColorMap(normalized_depth, cv2.COLORMAP_INFERNO)
         
-        depth_stats = [
-            {
-                "Fotoğraf UID": self.image_uid,
-                "Derinlik Verisi": f"Min: {round(depth_min, 2)} | Max: {round(depth_max, 2)} | Ortalama: {round(depth_mean, 2)}",
-                "Image ID": self.image_uid,
-                "Min Depth": round(depth_min, 4),
-                "Max Depth": round(depth_max, 4),
-                "Mean Depth": round(depth_mean, 4),
-                "Resolution": f"{depth.shape[1]}x{depth.shape[0]}"
-            }
-        ]
+        depth_stats_dict = {
+            "Image ID": self.image_uid,
+            "Depth Data": f"Min: {round(depth_min, 2)} | Max: {round(depth_max, 2)} | Mean: {round(depth_mean, 2)}",
+            "Min Depth": round(depth_min, 4),
+            "Max Depth": round(depth_max, 4),
+            "Mean Depth": round(depth_mean, 4),
+            "Resolution": f"{depth.shape[1]}x{depth.shape[0]}"
+        }
+        
+        depth_stats = [json.dumps(depth_stats_dict)]
         
         self.context.depth_results.append({
             "uid": self.image_uid,
