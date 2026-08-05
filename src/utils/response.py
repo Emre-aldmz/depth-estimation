@@ -1,5 +1,4 @@
 import cv2
-import base64
 import numpy as np
 from sdks.novavision.src.helper.package import PackageHelper
 from sdks.novavision.src.base.model import Image as ImageModel
@@ -17,21 +16,21 @@ from capsules.DepthEstimation.src.models.PackageModel import (
 )
 
 def build_response_depth(context):
-
     results = context.depth_results[0]
     depth_img_bgr = results['depth_image_bgr']
-    
-    _, buffer = cv2.imencode('.jpg', depth_img_bgr)
-    img_base64 = base64.b64encode(buffer).decode('utf-8')
     
     depth_image_obj = ImageModel(
         uID=results['uid'] + '_depth',
         name='outputDepthImage',
         mimeType='image/jpg',
-        encoding='base64',
-        value=img_base64,
+        encoding='bytes',
+        value=depth_img_bgr,
+        r_key='',
+        shape_key=b'',
         type='Image'
     )
+    
+    depth_image_obj = SDKImage.set_frame(img=depth_image_obj, package_uID=context.uID, redis_db=context.redis_db)
     
     out_image = OutputDepthImage(value=depth_image_obj)
     out_array = OutputDepthArray(value=results['raw_depth'])
