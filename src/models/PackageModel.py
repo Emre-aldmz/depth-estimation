@@ -25,7 +25,6 @@ class OutputDepthImage(Output):
     type: Literal["Images"] = "Images"
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
-    publish: Literal["stream"] = "stream"
 
     class Config:
         title = "Depth Map Image"
