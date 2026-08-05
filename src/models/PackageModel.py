@@ -47,7 +47,7 @@ class ConfigDeviceGPU(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "GPU (CUDA)"
+        title = "GPU"
 
 class ConfigDeviceCPU(Config):
     name: Literal["ConfigDeviceCPU"] = "ConfigDeviceCPU"
@@ -76,7 +76,7 @@ class ModelVersionV2Small(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev2_small"
+        title = "Small"
 
 class ModelVersionV2Base(Config):
     name: Literal["V2_Base"] = "V2_Base"
@@ -85,7 +85,7 @@ class ModelVersionV2Base(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev2_base"
+        title = "Base"
 
 class ModelVersionV2Large(Config):
     name: Literal["V2_Large"] = "V2_Large"
@@ -94,7 +94,7 @@ class ModelVersionV2Large(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev2_large"
+        title = "Large"
 
 class ModelVersionV3Small(Config):
     name: Literal["V3_Small"] = "V3_Small"
@@ -103,7 +103,7 @@ class ModelVersionV3Small(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev3_small"
+        title = "Small"
 
 class ModelVersionV3Base(Config):
     name: Literal["V3_Base"] = "V3_Base"
@@ -112,7 +112,7 @@ class ModelVersionV3Base(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev3_base"
+        title = "Base"
 
 class ModelVersionV3Large(Config):
     name: Literal["V3_Large"] = "V3_Large"
@@ -121,7 +121,7 @@ class ModelVersionV3Large(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "dev3_large"
+        title = "Large"
 
 class DepthAnythingV2(Config):
     name: Literal["DepthAnythingV2"] = "DepthAnythingV2"
@@ -131,7 +131,7 @@ class DepthAnythingV2(Config):
     restart: Literal[True] = True
 
     class Config:
-        title = "DepthAnythingV2"
+        title = "Version 2"
 
 class DepthAnythingV3(Config):
     name: Literal["DepthAnythingV3"] = "DepthAnythingV3"
@@ -141,7 +141,7 @@ class DepthAnythingV3(Config):
     restart: Literal[True] = True
 
     class Config:
-        title = "DepthAnythingV3"
+        title = "Version 3"
 
 class ConfigModelVersion(Config):
     name: Literal["ConfigModelVersion"] = "ConfigModelVersion"
@@ -152,7 +152,7 @@ class ConfigModelVersion(Config):
 
     class Config:
         title = "Model Version"
-        json_schema_extra = {"shortDescription": "Select Depth Model"}
+        json_schema_extra = {"shortDescription": "Select Depth Anything Model"}
 
 class DepthInputs(Inputs):
     inputImage: InputImage
