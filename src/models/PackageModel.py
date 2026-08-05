@@ -21,10 +21,19 @@ class InputImage(Input):
 
 class OutputDepthImage(Output):
     name: Literal["outputDepthImage"] = "outputDepthImage"
-    value: Image
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
     listen: Literal["continuous"] = "continuous"
     branch: Literal["forward"] = "forward"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
+        return "object"
 
     class Config:
         title = "Depth Map Image"
