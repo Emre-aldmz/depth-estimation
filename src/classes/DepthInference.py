@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 import cv2
-import json
 
 class DepthInference:
     def __init__(self, context, image_value, image_uid):
@@ -51,7 +50,7 @@ class DepthInference:
             "Resolution": f"{depth.shape[1]}x{depth.shape[0]}"
         }
         
-        depth_stats = [json.dumps(depth_stats_dict)]
+        depth_stats = [depth_stats_dict]
         
         self.context.depth_results.append({
             "uid": self.image_uid,
