@@ -36,3 +36,5 @@ List of the resources.
 - Depth Anything V2 (GitHub)
 - Depth Anything V3 (GitHub)
 - OpenCV Colormaps (Inferno)
+
+> E
